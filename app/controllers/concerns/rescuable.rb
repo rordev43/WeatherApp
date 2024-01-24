@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Module: Rescuable
+# Purpose: To rescue some possible errors
 module Rescuable
   extend ActiveSupport::Concern
 
