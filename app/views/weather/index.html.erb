@@ -1,9 +1,7 @@
-
-
 <div class='w-full flex flex-col justify-center items-center'>
   <div class='w-[50%] flex flex-col'>
     <%= form_with(url: weather_path, method: :get, id: 'address-form', remote: true, class: 'w-full flex flex-col') do |form| %>
-      <%= form.text_field :address, id: 'address-input', placeholder: 'Street , City, State, Zip', class: 'w-full' %>
+      <%= form.text_field :address, id: 'address-input', placeholder: 'Street , City, State, Zip', class: 'w-full', required: true %>
       <%= form.submit :submit, value: 'Get Weather', class: 'ml-auto mt-3 rounded-full border-[1px] p-3', style: 'cursor:pointer;' %>
     <% end %>
   </div>
@@ -11,7 +9,12 @@
   <% if @weather.present? %>
     <div class='w-[50%] flex flex-col'>
       <div class='w-full flex justify-between'>
-        <h1 class='text-3xl font-bold'><%= @weather["name"] %></h1>
+        <h1 class='text-3xl font-bold'>
+          <%= @weather["name"] %>
+          <% if @weather['is_cached'] %>
+            <span class='ml-3 text-sm text-green-500'>Cached</span>
+          <% end %>
+        </h1>
       </div>
       <div class='flex items-center'>
         <img src="https://openweathermap.org/img/wn/<%= @weather["weather"][0]["icon"] %>@2x.png" />

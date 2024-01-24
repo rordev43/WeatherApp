@@ -12,32 +12,28 @@ module Rescuable
     rescue_from ActionController::UnknownFormat,            with: :render_unknown_format
   end
 
-  def render_unknown_format(_exception)
+  def render_unknown_format(exception)
     return if performed?
 
-    render file: Rails.public_path.join('406.html'), layout: false, status: :not_acceptable
+    @message = exception.message
+    render 'errors/error', status: :not_acceptable
   end
 
   def render_parameter_missing(exception)
     return if performed?
 
-    @message = if exception.errors.respond_to?(:to_h)
-                 exception.errors.map do |k, v|
-                   "#{k}: #{v.join(', ')}"
-                 end.join("\n")
-               else
-                 exception.errors
-               end
-    render file: Rails.public_path.join('422.html'), layout: false, status: :unprocessable_entity
+    @message = exception.message
+    render 'errors/error', status: :unprocessable_entity
   end
 
   def dont_rescue_authenticity_token(exception)
     raise exception
   end
 
-  def render_internal_error(_exception)
+  def render_internal_error(exception)
     return if performed?
 
-    render file: Rails.public_path.join('500.html'), layout: false, status: :internal_server_error
+    @message = exception.message
+    render 'errors/error', status: :internal_server_error
   end
 end

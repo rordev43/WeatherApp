@@ -25,5 +25,13 @@ module Weatherapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    redis_config = {
+      host: ENV.fetch('REDIS_HOST', nil),
+      port: ENV.fetch('REDIS_PORT', nil),
+      db: ENV.fetch('REDIS_DB', nil)
+    }
+
+    $redis = Redis.new(redis_config)
   end
 end

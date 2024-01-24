@@ -7,7 +7,7 @@ class AddressParsingService < ApplicationService
   attr_reader :address
 
   def initialize(address)
-    super
+    super()
     @address = address
     @geocodio = Geocodio::Client.new(ENV.fetch('GEOCODIO_API_KEY', nil))
   end
@@ -16,5 +16,8 @@ class AddressParsingService < ApplicationService
     locations = @geocodio.geocode([address])
 
     locations.best
+  rescue Geocodio::Client::Error => e
+    Rails.logger.error(e.message)
+    raise StandardError, 'Invaild Address'
   end
 end
