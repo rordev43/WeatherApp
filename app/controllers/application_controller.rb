@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
+# Application Controller
 class ApplicationController < ActionController::Base
+  # Concern to rescue some possible exceptions
   include Rescuable
 
   def route_not_found
