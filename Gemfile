@@ -63,6 +63,8 @@ gem 'tailwindcss-rails', '~> 2.3'
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug'
+  gem 'rails-controller-testing', '~> 1.0.5'
+  gem 'rspec-rails', '~> 6.1.0'
 end
 
 group :development do

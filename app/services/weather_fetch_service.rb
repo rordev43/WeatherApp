@@ -3,22 +3,19 @@
 # Weather Fetch Service
 # Purpose: Fetch the weather by address using openweathermap service
 class WeatherFetchService < ApplicationService
-  attr_reader :parsed_address
+  attr_reader :parsed_address, :conn
 
   def initialize(address)
-    super
+    super()
     @parsed_address = AddressParsingService.new(address).call
     @conn = Faraday.new('https://api.openweathermap.org/data/2.5/weather')
   end
 
   def call
-    response = request(request_params({ lat: parsed_address.latitude, lon: parsed_address.longitude }))
+    response = cached_value
+    return response if response.present?
 
-    unless response.status == 200
-      response = request(request_params({ q: "#{parsed_address.city}, #{parsed_address.state}, US" }))
-    end
-
-    JSON.parse(response.body)
+    cache(weather_from_api)
   end
 
   private
@@ -28,8 +25,36 @@ class WeatherFetchService < ApplicationService
   end
 
   def request(params)
-    @conn.get do |req|
+    conn.get do |req|
       req.params = params
     end
+  end
+
+  def cached_value
+    response = $redis.get(parsed_address.zip)
+    unless response.nil?
+      response = JSON.parse(response)
+      response['is_cached'] = true
+    end
+
+    response
+  end
+
+  def cache(response)
+    $redis.setex(parsed_address.zip, 30.minutes.to_i, response)
+    response = JSON.parse(response)
+    response['is_cached'] = false
+
+    response
+  end
+
+  def weather_from_api
+    response = request(request_params({ lat: parsed_address.latitude, lon: parsed_address.longitude }))
+
+    unless response.status == 200
+      response = request(request_params({ q: "#{parsed_address.city}, #{parsed_address.state}, US" }))
+    end
+
+    response.body
   end
 end

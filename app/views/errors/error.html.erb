@@ -1,0 +1,10 @@
+<div class='w-full flex flex-col justify-center items-center'>
+	<% if @message.present? %>
+		<div class='w-[50%] flex flex-col'>
+				<div class='w-full flex justify-between'>
+					<h1 class='text-3xl font-bold'><%= @message %></h1>
+				</div>
+				<%= link_to "Back", root_path, class: 'ml-auto mt-3 rounded-full border-[1px] p-3', style: 'cursor:pointer;' %>
+		</div>
+	<% end %>
+</div>
