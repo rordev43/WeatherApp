@@ -2,13 +2,15 @@
 
 # Weather Fetch Service
 # Purpose: Fetch the weather by address using openweathermap service
-class WeatherFetchService < ApplicationService
+class WeatherDetailsService < ApplicationService
   attr_reader :parsed_address, :conn
+
+  OPEN_WEATHER_HOST_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
   def initialize(address)
     super()
     @parsed_address = AddressParsingService.new(address).call
-    @conn = Faraday.new('https://api.openweathermap.org/data/2.5/weather')
+    @conn = Faraday.new(OPEN_WEATHER_HOST_URL)
   end
 
   def call
@@ -54,6 +56,8 @@ class WeatherFetchService < ApplicationService
     unless response.status == 200
       response = request(request_params({ q: "#{parsed_address.city}, #{parsed_address.state}, US" }))
     end
+
+    raise StandardError, "There's an issue with fetching weather service right now." if response.status != 200
 
     response.body
   end

@@ -5,27 +5,26 @@
       <%= form.submit :submit, value: 'Get Weather', class: 'ml-auto mt-3 rounded-full border-[1px] p-3', style: 'cursor:pointer;' %>
     <% end %>
   </div>
-
-  <% if @weather.present? %>
+  <% if (weather_details = extract_weather_details(@weather)).present? %>
     <div class='w-[50%] flex flex-col'>
       <div class='w-full flex justify-between'>
         <h1 class='text-3xl font-bold'>
-          <%= @weather["name"] %>
-          <% if @weather['is_cached'] %>
+          <%= weather_details["name"] %>
+          <% if weather_details["is_cached"] %>
             <span class='ml-3 text-sm text-green-500'>Cached</span>
           <% end %>
         </h1>
       </div>
       <div class='flex items-center'>
-        <img src="https://openweathermap.org/img/wn/<%= @weather["weather"][0]["icon"] %>@2x.png" />
-        <h3 class='ml-5 text-xl font-bold'><%= @weather["main"]["temp"] %>°C</h3>
+        <img src="https://openweathermap.org/img/wn/<%= weather_details["icon"] %>@2x.png" />
+        <h3 class='ml-5 text-xl font-bold'><%= weather_details["temp"] %>°C</h3>
       </div>
       <div>
-        <h4 class='text-5md font-bold'>Feels like <%= @weather["main"]["feels_like"] %>°C. <%= @weather["weather"][0]["description"] %>.</h4>
+        <h4 class='text-5md font-bold'>Feels like <%= weather_details["feels_like"] %>°C. <%= weather_details["description"] %>.</h4>
         <div class='bl-1 b'>
-          <p>Humidity: <%= @weather["main"]["humidity"] %>%</p>
-          <p>Pressure: <%= @weather["main"]["pressure"] %>hPa</p>
-          <p>Visibility: <%= @weather["visibility"] %>m</p>
+          <p>Humidity: <%= weather_details["humidity"] %>%</p>
+          <p>Pressure: <%= weather_details["pressure"] %>hPa</p>
+          <p>Visibility: <%= weather_details["visibility"] %>m</p>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe WeatherFetchService, type: :service do
+RSpec.describe WeatherDetailsService, type: :service do
   describe '#call' do
     context 'with a valid address' do
       let(:valid_address) { '1600 Amphitheatre Parkway, Mountain View, CA' }
@@ -29,7 +29,7 @@ RSpec.describe WeatherFetchService, type: :service do
         allow($redis).to receive(:get).and_return(nil)
         allow($redis).to receive(:setex)
 
-        service = WeatherFetchService.new(valid_address)
+        service = WeatherDetailsService.new(valid_address)
         result = service.call
 
         expect(result).to eq('weather' => 'sunny', 'is_cached' => false)
@@ -54,7 +54,7 @@ RSpec.describe WeatherFetchService, type: :service do
         cached_response = '{"weather": "cached_weather", "is_cached": true}'
         allow($redis).to receive(:get).and_return(cached_response)
 
-        service = WeatherFetchService.new(valid_address)
+        service = WeatherDetailsService.new(valid_address)
         result = service.call
 
         expect(result).to eq('weather' => 'cached_weather', 'is_cached' => true)
@@ -66,7 +66,7 @@ RSpec.describe WeatherFetchService, type: :service do
         allow(ENV).to receive(:fetch).with('OPEN_WEATHER_API_KEY', nil).and_return(nil)
         allow(ENV).to receive(:fetch).with('GEOCODIO_API_KEY', nil).and_return(nil)
 
-        expect { WeatherFetchService.new('Any Address').call }.to raise_error(StandardError, 'Invaild Address')
+        expect { WeatherDetailsService.new('Any Address').call }.to raise_error(StandardError, 'Invaild Address')
       end
     end
   end

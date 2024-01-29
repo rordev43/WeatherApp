@@ -6,12 +6,12 @@ require 'rails_helper'
 
 RSpec.describe WeatherController, type: :controller do
   describe '#weather' do
-    it 'calls WeatherFetchService with permitted params' do
+    it 'calls WeatherDetailsService with permitted params' do
       address = 'New York, NY'
       allow(controller).to receive(:permited_params).and_return(address: address)
 
-      weather_fetch_service = instance_double(WeatherFetchService, call: nil)
-      allow(WeatherFetchService).to receive(:new).with(address: address).and_return(weather_fetch_service)
+      weather_fetch_service = instance_double(WeatherDetailsService, call: nil)
+      allow(WeatherDetailsService).to receive(:new).with(address: address).and_return(weather_fetch_service)
 
       get :weather
 
@@ -20,7 +20,7 @@ RSpec.describe WeatherController, type: :controller do
 
     it 'renders the index template' do
       allow(controller).to receive(:permited_params).and_return(address: 'New York, NY')
-      allow_any_instance_of(WeatherFetchService).to receive(:call)
+      allow_any_instance_of(WeatherDetailsService).to receive(:call)
 
       get :weather
 

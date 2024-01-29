@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   # Defines the root path route ("/")
-  get '/weather' => 'weather#weather', as: :weather
+  get '/weather' => 'weather#fetch', as: :weather
   root 'weather#index'
 
   match '*unmatched', to: 'application#route_not_found', via: :all

@@ -2,12 +2,15 @@
 
 # Weather Controller
 class WeatherController < ApplicationController
-  def weather
-    @weather = WeatherFetchService.new(permited_params).call
+  def fetch
+    @weather = WeatherDetailsService.new(permitted_params).call
+
     render :index
   end
 
-  def permited_params
+  private
+
+  def permitted_params
     params.require(:address)
   end
 end
